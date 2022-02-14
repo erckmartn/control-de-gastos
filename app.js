@@ -7,7 +7,6 @@ const inputTransactionName = document.querySelector('#text')
 const inputTransactionAmount = document.querySelector('#amount')
 
 
-
 /* let transactions = [
 
 	{id:1, name:'Plan movil', amount: -45},
@@ -27,22 +26,22 @@ let transactions = localStorage.
 
 
 const removeTransaction = ID => {
-	transactions = transactions.filter(transaction => transaction.id !== ID)
+	transactions = transactions.filter(transaction => id !== ID)
 	updateLocalStorage()
 	init()
 	
 }
 
-const addTransactionDOM = transaction => {
-	const operator = transaction.amount < 0 ? '-' : '+'
-	const cssClass = transaction.amount < 0 ? 'minus' : 'plus'
-	const amountWithoutOperator = Math.abs(transaction.amount)
+const addTransactionDOM = ({amount, name, id}) => {
+	const operator = amount < 0 ? '-' : '+'
+	const cssClass = amount < 0 ? 'minus' : 'plus'
+	const amountWithoutOperator = Math.abs(amount)
 	const li = document.createElement('li')
 	
 	li.classList.add(cssClass)
 	li.innerHTML = `
-		${transaction.name} <span>${operator} S/${Math.abs(amountWithoutOperator)}</span>
-		<button class="delete-btn" onclick = "removeTransaction(${transaction.id})">x</button>	
+		${name} <span>${operator} S/${Math.abs(amountWithoutOperator)}</span>
+		<button class="delete-btn" onclick = "removeTransaction(${id})">x</button>	
 	`
 	transactionsUl.append(li)
 	
@@ -51,21 +50,29 @@ const addTransactionDOM = transaction => {
         </li> */}
 }
 
+
+const getTotal = transactionAmounts  => total = transactionAmounts
+		.reduce((accumulator, transaction) => accumulator + transaction, 0)
+		.toFixed(2)
+
+const getIncome = transactionAmounts =>  transactionAmounts.filter(value => value > 0)
+		.reduce((accumulator, value) => accumulator + value, 0)
+		.toFixed(2)
+		
+const getExpense = transactionAmounts =>  Math.abs(transactionAmounts.filter(value => value < 0)
+		.reduce((accumulator, value) => accumulator + value, 0))
+		.toFixed(2)
+
  
 const updateBalaceValues = () => {
 	
-	const transactionAmounts = transactions
-		.map(transaction => transaction.amount)
-	const total = transactionAmounts
-		.reduce((accumulator, transaction) => accumulator + transaction, 0)
-		.toFixed(2)
+	const transactionAmounts = transactions.map(({amount}) => amount)
 		
-	const income = transactionAmounts.filter(value => value > 0)
-		.reduce((accumulator, value) => accumulator + value, 0)
-		.toFixed(2)
-	const expense = Math.abs(transactionAmounts.filter(value => value < 0)
-		.reduce((accumulator, value) => accumulator + value, 0))
-		.toFixed(2)
+	const total = getTotal(transactionAmounts)
+		
+	const income = getIncome(transactionAmounts)
+	
+	const expense = getExpense(transactionAmounts)	
 		
 	balanceDisplay.textContent =  `S/ ${total}`
 	
@@ -91,31 +98,48 @@ const updateLocalStorage = () => {
 
 const generateID = () => Math.round(Math.random() * 1000)
 
-form.addEventListener('submit', event => {
+
+const addTransactionsArray = (transactionName, transactionAmount) => {
+	
+	transactions.push({
+		id:generateID(),
+		name:transactionName,
+		amount: +transactionAmount
+		})
+}
+const cleanInputs = () => {
+	inputTransactionName.value = ''
+	inputTransactionAmount.value = ''
+}
+
+const handlerSubmitForm = event => {
+	
 	event.preventDefault()
 	
 	const transactionName =  inputTransactionName.value.trim()
 	const transactionAmount = inputTransactionAmount.value.trim()
+	const isSomeEmpthy = transactionName === '' || transactionAmount === ''
 	
-	if (transactionName === '' || transactionAmount === '') {
+	if (isSomeEmpthy) {
 		alert('Por favor, ingresa tanto el valor de la transaccion y el monto')
 		return
 	}
 		
-	const transaction = {
-		id:generateID(),
-		name:transactionName,
-		amount: +transactionAmount
-		}
-		
-	console.log(transaction)
+	addTransactionsArray(transactionName, transactionAmount)
 	
-	transactions.push(transaction)
 	init()
 	updateLocalStorage()
-	
-	inputTransactionName.value = ''
-	inputTransactionAmount.value = ''
-	
-})
+	cleanInputs()
+}
 
+
+form.addEventListener('submit', handlerSubmitForm)
+
+
+const hoverButtonDisplay = document.querySelectorAll('.delete-btn')
+
+/* console.log(hoverButtonDisplay)
+
+const hover = 
+
+const end =  */
