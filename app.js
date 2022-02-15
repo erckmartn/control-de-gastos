@@ -26,7 +26,7 @@ let transactions = localStorage.
 
 
 const removeTransaction = ID => {
-	transactions = transactions.filter(transaction => id !== ID)
+	transactions = transactions.filter(transaction => transaction.id !== ID)
 	updateLocalStorage()
 	init()
 	
@@ -50,7 +50,6 @@ const addTransactionDOM = ({amount, name, id}) => {
         </li> */}
 }
 
-
 const getTotal = transactionAmounts  => total = transactionAmounts
 		.reduce((accumulator, transaction) => accumulator + transaction, 0)
 		.toFixed(2)
@@ -63,8 +62,7 @@ const getExpense = transactionAmounts =>  Math.abs(transactionAmounts.filter(val
 		.reduce((accumulator, value) => accumulator + value, 0))
 		.toFixed(2)
 
- 
-const updateBalaceValues = () => {
+ const updateBalaceValues = () => {
 	
 	const transactionAmounts = transactions.map(({amount}) => amount)
 		
@@ -97,7 +95,6 @@ const updateLocalStorage = () => {
 }
 
 const generateID = () => Math.round(Math.random() * 1000)
-
 
 const addTransactionsArray = (transactionName, transactionAmount) => {
 	
@@ -132,9 +129,7 @@ const handlerSubmitForm = event => {
 	cleanInputs()
 }
 
-
 form.addEventListener('submit', handlerSubmitForm)
-
 
 const hoverButtonDisplay = document.querySelectorAll('.delete-btn')
 
